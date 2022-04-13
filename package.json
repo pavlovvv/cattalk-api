@@ -1,0 +1,20 @@
+{
+  "name": "cattalkapi",
+  "version": "1.0.0",
+  "description": "An API for CatTalk service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexey Pavlov",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.17.3",
+    "mongodb": "^4.5.0",
+    "yarn": "^1.22.18"
+  },
+  "engines": {
+    "node": "v16.14.0"
+  }
+}
