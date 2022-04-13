@@ -4,7 +4,7 @@ const ObjectId = require('mongodb').ObjectId
 const cookieParser = require('cookie-parser')
 const app = express();
 let db;
-const port = 3013
+const port = process.env.PORT || 3013
 
 app.use(cookieParser())
 app.use(express.json());
