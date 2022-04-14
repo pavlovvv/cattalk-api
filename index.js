@@ -30,7 +30,26 @@ app.post('/users/sign', (req, res) => {
                 console.log(err)
                 return res.status(500)
             }
-            res.send('success')
+            res.status(200).json({msg: "Auth confirmed"})
+        })
+    })
+
+    db.collection('users').find().toArray((err, docs) => {
+
+        const user = {
+            name: req.body.name,
+            surname: req.body.surname,
+            username: req.body.username,
+            email: req.body.email,
+            id: docs.length + 1
+        }
+    
+        db.collection('users').insertOne(user, (err, result) => {
+            if (err) {
+                console.log(err)
+                return res.status(500)
+            }
+            return res.status(200).json({msg: "Auth confirmed"})
         })
     })
 })
