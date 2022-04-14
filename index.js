@@ -33,7 +33,6 @@ app.post('/users/sign', (req, res) => {
                 console.log(err)
                 return res.status(500)
             }
-            res.status(200).json({msg: "Auth confirmed"})
         })
     })
 
