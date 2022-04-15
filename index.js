@@ -12,11 +12,10 @@ app.use(express.urlencoded({ extended: true }));
 
 var cors = require('cors');    
  app.use(cors({credentials: true,
-  allowedHeaders :  ['Content-Type', 'Authorization'],
-  origin: 'http://localhost:3000',
- "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
- "preflightContinue": false,
- "optionsSuccessStatus": 200}));
+    origin: 'http://localhost:3000',
+    allowedHeaders :  '*',
+    "preflightContinue": false,
+    "optionsSuccessStatus": 200}));
 
 
 
