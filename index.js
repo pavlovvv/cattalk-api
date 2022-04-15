@@ -14,7 +14,7 @@ var cors = require('cors');
  app.use(cors({credentials: true,
     origin: 'http://localhost:3000',
     allowedHeaders :  '*',
-    "preflightContinue": false,
+    methods: '*',
     "optionsSuccessStatus": 200}));
 
 
