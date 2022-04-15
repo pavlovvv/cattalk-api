@@ -10,8 +10,14 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var cors = require('cors');    
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+const cors=require("cors");
+const corsOptions ={
+   origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
+
+app.use(cors(corsOptions)) 
   
 
 
