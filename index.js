@@ -12,9 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 var cors = require('cors');    
  app.use(cors({credentials: true,
-    origin: false,
-    allowedHeaders :  '*',
-    methods: '*',
+    origin: 'http://localhost:3000',
+    allowedHeaders :  'Content-Type,application/json',
     "optionsSuccessStatus": 200}));
 
 
