@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 var cors = require('cors');    
  app.use(cors({credentials: true,
     origin: 'http://localhost:3000',
-    allowedHeaders :  'Content-Type,application/json',
+    allowedHeaders :  'Authorization, Origin, X-Requested-With, content-type, Accept',
     "optionsSuccessStatus": 200}));
 
 
@@ -104,6 +104,8 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
         res.send(doc)
     })
 })
+
+
 
 
 MongoClient.connect('mongodb+srv://pavlov:mspx@cattalk.g76jv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
