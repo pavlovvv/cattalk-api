@@ -76,7 +76,7 @@ app.post('/users/auth', (req, res) => {
         else if (!doc) return res.status(403).json({msg: "User was not found"}) 
 
         else if (doc.password === req.body.password) {
-            res.cookie('CatTalk_userId', doc.id, {sameSite: 'None'})
+            res.cookie('CatTalk_userId', doc.id, {secure: true, sameSite: 'None'})
             db.collection('users').findOne({ email: req.body.email }, (err, doc2) => {
                 if (doc) { 
                     return res.status(200).json(doc2)
