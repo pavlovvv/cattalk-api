@@ -77,8 +77,13 @@ app.post('/users/auth', (req, res) => {
 
         else if (doc.password === req.body.password) {
             res.cookie('CatTalk_userId', doc.id)
-            return res.status(200).json({msg: "Auth confirmed"})}   
-
+            db.collection('users').findOne({ email: req.body.email }, (err, doc2) => {
+                if (doc) { 
+                    return res.status(200).json(doc2)
+                }
+            
+            }) 
+        }
         else if (doc.password !== req.body.password) return res.status(403).json({msg: "Password is incorrect"})
     })
 })
