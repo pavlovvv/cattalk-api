@@ -84,7 +84,7 @@ app.post('/users/auth', (req, res) => {
             
             }) 
         }
-        else if (doc.password !== req.body.password) return res.status(403).json({msg: "Password is incorrect"})
+        else if (doc.password !== req.body.password) return res.status(403).json({msg: "Incorrect values"})
     })
 })
 
@@ -101,7 +101,7 @@ const ValidateCookies = (req,res,next) => {
 
 app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 
-    db.collection('usersData').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc) => {
+    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc) => {
         if (err) {
             console.log(err)
             return res.status(500)
