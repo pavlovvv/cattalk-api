@@ -110,7 +110,15 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
     })
 })
 
-
+app.delete('/users/logout', (req, res) => {
+    if ('CatTalk_userId' in req.cookies) {
+        cookies.set('CatTalk_userId', {expires: Date.now()});
+        res.status(200).json({msg: 'Success'})
+    }
+    else {
+        res.status(403).send({msg: "Not Authenticated"})
+    }
+})
 
 
 MongoClient.connect('mongodb+srv://pavlov:mspx@cattalk.g76jv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
