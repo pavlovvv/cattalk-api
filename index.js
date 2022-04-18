@@ -110,14 +110,9 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
     })
 })
 
-app.delete('/users/logout', (req, res) => {
-    if ('CatTalk_userId' in req.cookies) {
+app.delete('/users/logout', ValidateCookies, (req, res) => {
         cookies.set('CatTalk_userId', {expires: Date.now()});
         return res.status(200).json({msg: 'Success'})
-    }
-    else {
-        res.status(403).send({msg: "Not Authenticated"})
-    }
 })
 
 
