@@ -110,7 +110,7 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
     })
 })
 
-app.delete('/users/logout', ValidateCookies, (req, res) => {
+app.post('/users/logout', ValidateCookies, (req, res) => {
         cookies.set('CatTalk_userId', {expires: Date.now()});
         return res.status(200).json({msg: 'Success'})
 })
