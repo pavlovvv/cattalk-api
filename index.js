@@ -114,7 +114,7 @@ app.delete('/users/logout', (req, res) => {
     if ('CatTalk_userId' in req.cookies) {
         cookies.set('CatTalk_userId', {expires: Date.now()});
         next()
-        res.status(200).json({msg: 'Success'})
+        return res.status(200).json({msg: 'Success'})
     }
     else {
         res.status(403).send({msg: "Not Authenticated"})
