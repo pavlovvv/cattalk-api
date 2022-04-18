@@ -113,6 +113,7 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 app.delete('/users/logout', (req, res) => {
     if ('CatTalk_userId' in req.cookies) {
         cookies.set('CatTalk_userId', {expires: Date.now()});
+        next()
         res.status(200).json({msg: 'Success'})
     }
     else {
