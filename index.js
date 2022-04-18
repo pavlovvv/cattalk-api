@@ -111,7 +111,7 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 })
 
 app.delete('/users/logout', ValidateCookies, (req, res) => {
-        res.cookie('CatTalk_userId', {secure: true, sameSite: 'None', expires: Date.now()});
+        res.cookie('CatTalk_userId', '1', {secure: true, sameSite: 'None', expires: Date.now()});
         return res.status(200).json({msg: 'Success'})
 })
 
