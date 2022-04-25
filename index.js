@@ -50,11 +50,20 @@ app.post('/users/sign', (req, res) => {
     db.collection('users').find().toArray((err, docs) => {
 
         const user = {
-            name: req.body.name,
-            surname: req.body.surname,
-            username: req.body.username,
-            email: req.body.email,
-            id: docs.length + 1
+            info: {
+                name: req.body.name,
+                surname: req.body.surname,
+                username: req.body.username,
+                email: req.body.email,
+                id: docs.length + 1
+            },
+            stats: {
+                totalChats: 0,
+                totalMessagesSent: 0,
+                totalCharactersEntered: 0,
+            },
+            friends: []
+            
         }
     
         db.collection('users').insertOne(user, (err, result) => {
