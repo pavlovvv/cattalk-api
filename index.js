@@ -50,6 +50,7 @@ app.post('/users/sign', (req, res) => {
     db.collection('users').find().toArray((err, docs) => {
 
         const user = {
+            id: docs.length + 1,
             email: req.body.email,
             info: {
                 name: req.body.name,
