@@ -50,12 +50,16 @@ app.post('/users/sign', (req, res) => {
     db.collection('users').find().toArray((err, docs) => {
 
         const user = {
+            email: req.body.email,
             info: {
                 name: req.body.name,
                 surname: req.body.surname,
                 username: req.body.username,
                 email: req.body.email,
-                id: docs.length + 1
+                id: docs.length + 1,
+                age: null,
+                location: null,
+                instagramIcon: null
             },
             stats: {
                 totalChats: 0,
