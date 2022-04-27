@@ -135,7 +135,7 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
         }
 
         db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
-        { $set: { info: {surname: doc1.surname, name: req.body.name} } }, (err, doc2) => {
+        { $set: { info: {name: req.body.name, surname: doc1.info.surname} } }, (err, doc2) => {
             if (err) {
                 console.log(err)
                 return res.status(500)
