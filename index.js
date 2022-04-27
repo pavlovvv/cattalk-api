@@ -60,7 +60,7 @@ app.post('/users/sign', (req, res) => {
                 id: docs.length + 1,
                 age: null,
                 location: null,
-                instagramIcon: null
+                instagramLink: null
             },
             stats: {
                 totalChats: 0,
@@ -142,7 +142,7 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
             email: doc1.info.email, 
             id: doc1.info.id, age: req.body.age, 
             location: req.body.location, 
-            instagramIcon: doc1.info.instagramIcon} } }, (err, doc2) => {
+            instagramLink: doc1.info.instagramLink} } }, (err, doc2) => {
             if (err) {
                 console.log(err)
                 return res.status(500)
