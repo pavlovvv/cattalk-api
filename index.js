@@ -135,12 +135,19 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
         }
 
         db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
-        { $set: { info: {name: req.body.name, surname: doc1.info.surname} } }, (err, doc2) => {
+        { $set: { info: {
+            name: req.body.name, 
+            surname: req.body.surname, 
+            username: req.body.username, 
+            email: doc1.info.email, 
+            id: doc1.info.id, age: req.body.age, 
+            location: req.body.location, 
+            instagramIcon: doc1.info.instagramIcon} } }, (err, doc2) => {
             if (err) {
                 console.log(err)
                 return res.status(500)
             }
-            res.send(doc1)
+            res.send({msg: 'Success'})
         })
     })
     
