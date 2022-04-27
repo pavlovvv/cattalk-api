@@ -127,14 +127,23 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 
 app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
-    db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
-    { $set: { info: {surname: info.surname, name: req.body.name} } }, (err, doc) => {
+
+    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
         if (err) {
             console.log(err)
             return res.status(500)
         }
-        res.send(doc)
+
+        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
+        { $set: { info: {surname: doc1.surname, name: req.body.name} } }, (err, doc2) => {
+            if (err) {
+                console.log(err)
+                return res.status(500)
+            }
+            res.send(doc1)
+        })
     })
+    
 })
 
 app.delete('/users/logout', ValidateCookies, (req, res) => {
