@@ -40,10 +40,9 @@ app.post('/users/sign', (req, res) => {
         }
     
         db.collection('usersData').insertOne(userData, (err, result) => {
-            if (err) {
-                console.log(err)
-                return res.status(500)
-            }
+         
+            if (err) return res.status(500)
+
         })
     })
 
@@ -74,10 +73,9 @@ app.post('/users/sign', (req, res) => {
         }
     
         db.collection('users').insertOne(user, (err, result) => {
-            if (err) {
-                console.log(err)
-                return res.status(500)
-               }
+           
+            if (err) return res.status(500)
+
             return res.status(200).json({msg: "Auth confirmed"})
         })
     })
@@ -86,10 +84,9 @@ app.post('/users/sign', (req, res) => {
 app.post('/users/auth', (req, res) => {
 
     db.collection('usersData').findOne({ email: req.body.email }, (err, doc) => {
-        if (err) {
-            console.log(err)
-            return res.status(500)
-        }
+    
+        if (err) return res.status(500)
+
         else if (!doc) return res.status(403).json({msg: "User was not found"}) 
 
         else if (doc.password === req.body.password) {
@@ -121,10 +118,9 @@ const ValidateCookies = (req,res,next) => {
 app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc) => {
-        if (err) {
-            console.log(err)
-            return res.status(500)
-        }
+       
+        if (err) return res.status(500)
+       
         res.send(doc)
     })
 })
@@ -133,10 +129,8 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
-        if (err) {
-            console.log(err)
-            return res.status(500)
-        }
+        
+        if (err) return res.status(500)
 
         db.collection('users').findOne({ login: req.body.username }, (err, loginDoc) => {
 
@@ -156,10 +150,16 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
                 location: req.body.location, 
                 avatar: doc1.info.avatar, 
                 instagramLink: doc1.info.instagramLink} } }, (err, doc2) => {
-                if (err) {
-                    console.log(err)
-                    return res.status(500)
-                }
+
+                    if (err) return res.status(500)
+
+                db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
+                { $set: { login: req.body.username } }, (err, doc2) => {
+                    
+                    if (err) return res.status(500)
+                    
+                })
+                
                 res.send({msg: 'Success'})
             })
         })
@@ -180,7 +180,7 @@ app.delete('/users/logout', ValidateCookies, (req, res) => {
 MongoClient.connect('mongodb+srv://pavlov:mspx@cattalk.g76jv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
 
     if (err) {
-        return console.log(err)
+        return 
     }
 
     db = client.db('CatTalk');
