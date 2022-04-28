@@ -134,10 +134,11 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
         db.collection('users').findOne({ login: req.body.username }, (err, loginDoc) => {
 
-            if (doc1.id !== loginDoc.id) {
-                return res.status(409).send({msg: "Username is already exist"})
+            if (loginDoc.id) {
+                if (doc1.id !== loginDoc.id) {
+                    return res.status(409).send({msg: "Username is already exist"})
+                }
             }
-
 
             db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
             { $set: { info: {
@@ -155,7 +156,7 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
                 db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
                 { $set: { login: req.body.username } }, (err, doc2) => {
-                    
+
                     if (err) return res.status(500)
                     
                 })
