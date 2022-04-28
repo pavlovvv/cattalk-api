@@ -126,7 +126,7 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 })
 
 
-app.post('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
+app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
         
@@ -134,7 +134,8 @@ app.post('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
         db.collection('users').findOne({ login: req.body.username }, (err, loginDoc) => {
 
-            if (loginDoc.id) {
+            console.log(loginDoc)
+            if (loginDoc) {
                 if (doc1.id !== loginDoc.id) {
                     return res.status(409).send({msg: "Username is already exist"})
                 }
