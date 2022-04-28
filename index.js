@@ -126,7 +126,7 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 })
 
 
-app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
+app.post('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
         
