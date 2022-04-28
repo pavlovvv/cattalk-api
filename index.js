@@ -52,6 +52,7 @@ app.post('/users/sign', (req, res) => {
         const user = {
             id: docs.length + 1,
             email: req.body.email,
+            login: req.body.username,
             info: {
                 name: req.body.name,
                 surname: req.body.surname,
@@ -60,6 +61,7 @@ app.post('/users/sign', (req, res) => {
                 id: docs.length + 1,
                 age: null,
                 location: null,
+                avatar: null,
                 instagramLink: null
             },
             stats: {
@@ -91,7 +93,9 @@ app.post('/users/auth', (req, res) => {
         else if (!doc) return res.status(403).json({msg: "User was not found"}) 
 
         else if (doc.password === req.body.password) {
-            res.cookie('CatTalk_userId', doc.id, {secure: true, sameSite: 'None'})
+            res.cookie('CatTalk_userId', doc.id, {
+                secure: true,
+                 sameSite: 'None'})
             db.collection('users').findOne({ email: req.body.email }, (err, doc2) => {
                 if (doc) { 
                     return res.status(200).json(doc2)
@@ -100,7 +104,7 @@ app.post('/users/auth', (req, res) => {
             }) 
         }
         else if (doc.password !== req.body.password) return res.status(403).json({msg: "Incorrect values"})
-    })
+     })
 })
 
 
@@ -125,8 +129,8 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
     })
 })
 
-app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
+app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
         if (err) {
@@ -134,22 +138,36 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
             return res.status(500)
         }
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
-        { $set: { info: {
-            name: req.body.name, 
-            surname: req.body.surname, 
-            username: req.body.username, 
-            email: doc1.info.email, 
-            id: doc1.info.id, age: req.body.age, 
-            location: req.body.location, 
-            instagramLink: doc1.info.instagramLink} } }, (err, doc2) => {
-            if (err) {
-                console.log(err)
-                return res.status(500)
+        db.collection('users').findOne({ login: req.body.username }, (err, loginDoc) => {
+
+            if (doc1.id !== loginDoc.id) {
+                return res.status(409).send({msg: "Username is already exist"})
             }
-            res.send({msg: 'Success'})
+
+
+            db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) }, 
+            { $set: { info: {
+                name: req.body.name, 
+                surname: req.body.surname, 
+                username: req.body.username, 
+                email: doc1.info.email, 
+                id: doc1.info.id, 
+                age: req.body.age, 
+                location: req.body.location, 
+                avatar: doc1.info.avatar, 
+                instagramLink: doc1.info.instagramLink} } }, (err, doc2) => {
+                if (err) {
+                    console.log(err)
+                    return res.status(500)
+                }
+                res.send({msg: 'Success'})
+            })
         })
-    })
+
+        })
+
+
+        
     
 })
 
