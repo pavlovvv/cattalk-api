@@ -12,8 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 var cors = require('cors');    
  app.use(cors({credentials: true,
-    // origin: 'https://cat-talk2.vercel.app',
-    origin: 'http://localhost:3000',
+    origin: 'https://cat-talk2.vercel.app',
+    // origin: 'http://localhost:3000',
     allowedHeaders :  'Authorization, Origin, X-Requested-With, content-type, Accept',
     "optionsSuccessStatus": 200}));
 
@@ -134,7 +134,7 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
         db.collection('users').findOne({ login: req.body.username }, (err, loginDoc) => {
 
-            console.log(loginDoc)
+
             if (loginDoc) {
                 if (doc1.id !== loginDoc.id) {
                     return res.status(409).send({msg: "Username is already exist"})
