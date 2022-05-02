@@ -87,7 +87,7 @@ app.post('/users/auth', (req, res) => {
     
         if (err) return res.status(500)
 
-        else if (!doc) return res.status(403).json({msg: "User was not found"}) 
+        else if (!doc) return res.status(404).json({msg: "User was not found"}) 
 
         else if (doc.password === req.body.password) {
             res.cookie('CatTalk_userId', doc.id, {
@@ -176,6 +176,17 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 app.delete('/users/logout', ValidateCookies, (req, res) => {
         res.cookie('CatTalk_userId', '0', {secure: true, sameSite: 'None', maxAge: 0});
         return res.status(200).json({msg: 'Success'})
+})
+
+app.get('/users/:id', (req, res) => {
+
+    db.collection('users').findOne({ id: parseInt(req.params.id) }, (err, doc) => {
+       
+        if (err) return res.status(500)
+        if (!doc) return res.status(404).json({msg: 'User was not found'})        
+        res.send(doc)
+
+    })
 })
 
 
