@@ -190,6 +190,34 @@ app.get('/users/:id', (req, res) => {
 })
 
 
+app.post('/token/add', (req, res) => {
+
+    const tokenData = {
+        token: req.body.token,
+        isBusy: false,
+        connectedUsers: 0
+    }
+ 
+        db.collection('tokens').insertOne(tokenData, (err, result) => {
+         
+            if (err) return res.status(500)
+
+            res.status(200).json({msg : "Success"})
+
+        })
+  
+    })
+
+app.get('/token/get',  (req, res) => {
+
+        db.collection('tokens').find({isBusy: false}).toArray((err, docs) => {
+            if (err) return res.status(500)
+            const num = Math.floor(Math.random() * docs.length)
+            res.send(docs[parseInt(num)])
+        })
+    })
+
+
 MongoClient.connect('mongodb+srv://pavlov:mspx@cattalk.g76jv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
 
     if (err) {
