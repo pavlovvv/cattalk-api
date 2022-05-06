@@ -253,6 +253,7 @@ app.post('/chat/join', (req, res) => {
                 db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
 
                     if (err) return res.status(500)
+                    console.log(doc3)
                     db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
                         {
                             $set: {
