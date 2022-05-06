@@ -250,7 +250,7 @@ app.post('/chat/join', (req, res) => {
 
                 res.status(200).send({ msg: 'Success' })
 
-                db.collection('tokens').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+                db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
 
                     if (err) return res.status(500)
 
