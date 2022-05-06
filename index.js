@@ -217,7 +217,7 @@ app.get('/token/get',  (req, res) => {
         })
     })
 
-app.get('/token/find',  (req, res) => {
+app.post('/token/find',  (req, res) => {
 
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc) => {
        
