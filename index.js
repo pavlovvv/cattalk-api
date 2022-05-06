@@ -253,14 +253,13 @@ app.post('/chat/join', (req, res) => {
                 db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
 
                     if (err) return res.status(500)
-                    console.log(doc3.totalMessagesSent)
                     db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
                         {
                             $set: {
                                 stats: {
-                                    totalChats: parseInt(doc3.totalChats + 1),
-                                    totalMessagesSent: parseInt(doc3.totalMessagesSent),
-                                    totalCharactersEntered: parseInt(doc3.totalCharactersEntered) 
+                                    totalChats: parseInt(doc3.stats.totalChats + 1),
+                                    totalMessagesSent: parseInt(doc3.stats.totalMessagesSent),
+                                    totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered) 
                                 }
                             }
                         }, (err, doc4) => {
