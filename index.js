@@ -217,6 +217,17 @@ app.get('/token/get',  (req, res) => {
         })
     })
 
+app.get('/token/find',  (req, res) => {
+
+    db.collection('tokens').findOne({ token: req.body.token }, (err, doc) => {
+       
+        if (err) return res.status(500)
+        if (!doc) return res.status(404).json({msg: 'Token was not found'})        
+        res.status(200).json({msg: 'Success'})
+
+    })
+})
+
 
 MongoClient.connect('mongodb+srv://pavlov:mspx@cattalk.g76jv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
 
