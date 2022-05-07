@@ -93,7 +93,6 @@ app.post('/users/sign', (req, res) => {
 })
 
 
-
 app.post('/users/auth', (req, res) => {
 
     db.collection('usersData').findOne({ email: req.body.email }, (err, doc) => {
