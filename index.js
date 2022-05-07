@@ -13,29 +13,22 @@ app.use(express.urlencoded({ extended: true }));
 let cors = require('cors');
 
 app.use(cors());
-// app.use(cors({
-//     origin: 'http://localhost:3000',
-//     credentials: true,
-//     // origin: 'https://cat-talk2.vercel.app',
-//     allowedHeaders: 'Authorization, Origin, X-Requested-With, content-type, Accept',
-//     "optionsSuccessStatus": 200
-// }));
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000',
+    // origin: 'https://cat-talk2.vercel.app',
+    allowedHeaders: 'Authorization, Origin, X-Requested-With, Access-Control-Request-Headers, content-type, Content-Type, Access-Control-Request-Method, Accept, Access-Control-Allow-Headers',
+    "optionsSuccessStatus": 200
+}));
 
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//     res.header("Access-Control-Allow-Credentials", true);
-//     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-//     res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-//   })
-
-app.all('*', function (req, res, next) {
+app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-  });
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+  })
+
+
 
 
 app.get('/', (req, res) => {
