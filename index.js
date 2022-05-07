@@ -278,7 +278,6 @@ app.post('/chat/join', (req, res) => {
 
 })
 
-
 app.post('/chat/leave', (req, res) => {
 
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
