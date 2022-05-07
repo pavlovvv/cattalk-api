@@ -10,11 +10,11 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var cors = require('cors');
+let cors = require('cors');
 app.use(cors({
+    origin: 'http://localhost:3000',
     credentials: true,
     // origin: 'https://cat-talk2.vercel.app',
-    origin: 'http://localhost:3000',
     allowedHeaders: 'Authorization, Origin, X-Requested-With, content-type, Accept',
     "optionsSuccessStatus": 200
 }));
@@ -253,8 +253,6 @@ app.post('/chat/join', (req, res) => {
                 db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
 
                     if (err) return res.status(500)
-                    console.log(doc3.stats)
-                    console.log(doc3.stats.totalMessagesSent)
                     db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
                         {
                             $set: {
