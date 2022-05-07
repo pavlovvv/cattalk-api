@@ -12,7 +12,6 @@ app.use(express.urlencoded({ extended: true }));
 
 let cors = require('cors');
 
-app.use(cors());
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000',
