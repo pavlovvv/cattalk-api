@@ -259,8 +259,6 @@ app.post('/chat/join', (req, res) => {
 
                 if (err) return res.status(500)
 
-                res.status(200).send({ msg: 'Success' })
-
                 db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
 
                     if (err) return res.status(500)
@@ -277,7 +275,7 @@ app.post('/chat/join', (req, res) => {
 
                             if (err) return res.status(500)
 
-                            res.status(200).send({ msg: 'Success' })
+                            return res.status(200).send({ msg: 'Success' })
 
                         })
 
