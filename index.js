@@ -124,7 +124,7 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 
         if (err) return res.status(500)
 
-        res.send(doc)
+        res.status(200).send(doc)
     })
 })
 
