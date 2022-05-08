@@ -125,7 +125,7 @@ const ValidateCookies = (req, res, next) => {
         next()
     }
     else {
-        res.status(403).send({ msg: "Not Authenticated" })
+        res.status(403).json({ msg: "Not Authenticated" })
     }
 }
 
@@ -151,7 +151,7 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
             if (loginDoc) {
                 if (doc1.id !== loginDoc.id) {
-                    return res.status(409).send({ msg: "Username is already exist" })
+                    return res.status(409).json({ msg: "Username is already exist" })
                 }
             }
 
@@ -181,7 +181,7 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
                         })
 
-                    res.send({ msg: 'Success' })
+                    res.status(200).json({ msg: 'Success' })
                 })
         })
 
@@ -258,7 +258,7 @@ app.post('/token/getConnectedUsers', (req, res) => {
     })
 })
 
-app.post('/chat/join', (req, res) => {
+app.post('/chat/join', ValidateCookies, (req, res) => {
 
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
 
@@ -286,7 +286,7 @@ app.post('/chat/join', (req, res) => {
 
                             if (err) return res.status(500)
 
-                            return res.status(200).send({ msg: 'Success' })
+                            return res.status(200).json({ msg: 'Success' })
 
                         })
 
@@ -298,7 +298,7 @@ app.post('/chat/join', (req, res) => {
 
 })
 
-app.post('/chat/leave', (req, res) => {
+app.post('/chat/leave', ValidateCookies, (req, res) => {
 
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
 
@@ -310,12 +310,64 @@ app.post('/chat/leave', (req, res) => {
 
                 if (err) return res.status(500)
 
-                res.status(200).send({ msg: 'Success' })
+                res.status(200).json({ msg: 'Success' })
             })
 
     })
 
 })
+
+
+app.post('/chat/sendMessage', ValidateCookies, (req, res) => {
+
+    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+
+        if (err) return res.status(500)
+
+        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+            {
+                $set: {
+                    stats: {
+                        totalChats: parseInt(doc3.stats.totalChats),
+                        totalMessagesSent: parseInt(doc3.stats.totalMessagesSent + 1),
+                        totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered) 
+                    }
+                }
+            }, (err, doc4) => {
+
+                if (err) return res.status(500)
+
+                return res.status(200).json({ msg: 'Success' })
+
+            })
+    })
+})
+
+
+app.post('/chat/enterCharacter', ValidateCookies, (req, res) => {
+
+                db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+
+                    if (err) return res.status(500)
+
+                    db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                        {
+                            $set: {
+                                stats: {
+                                    totalChats: parseInt(doc3.stats.totalChats),
+                                    totalMessagesSent: parseInt(doc3.stats.totalMessagesSent),
+                                    totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered + 1) 
+                                }
+                            }
+                        }, (err, doc4) => {
+
+                            if (err) return res.status(500)
+
+                            return res.status(200).json({ msg: 'Success' })
+
+                        })
+                })
+            })
 
 MongoClient.connect('mongodb+srv://pavlov:mspx@cattalk.g76jv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
 
