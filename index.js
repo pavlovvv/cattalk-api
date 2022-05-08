@@ -247,6 +247,17 @@ app.post('/token/find', (req, res) => {
     })
 })
 
+app.post('/token/getConnectedUsers', (req, res) => {
+
+    db.collection('tokens').findOne({ token: req.body.token }, (err, doc) => {
+
+        if (err) return res.status(500)
+        if (!doc) return res.status(404).json({ msg: 'Token was not found' })
+        res.status(200).json({ connectedUsers: doc.connectedUsers })
+
+    })
+})
+
 app.post('/chat/join', (req, res) => {
 
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
