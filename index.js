@@ -298,7 +298,7 @@ app.post('/chat/join', ValidateCookies, (req, res) => {
 
 })
 
-app.post('/chat/leave', ValidateCookies, (req, res) => {
+app.post('/chat/leave', (req, res) => {
 
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
 
