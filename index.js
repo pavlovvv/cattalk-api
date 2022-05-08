@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
     res.send(' can cats talk ?:)')
 })
 
-app.post('/users/sign', (req, res) => {
+app.post('/auth/signup', (req, res) => {
     db.collection('usersData').findOne({ email: req.body.email }, (err, doc) => {
         if (doc) {
             return res.status(409).json({ msg: "This email has already been used" })
@@ -94,7 +94,7 @@ app.post('/users/sign', (req, res) => {
 
 
 
-app.post('/users/auth', (req, res) => {
+app.post('/auth/login', (req, res) => {
 
     db.collection('usersData').findOne({ email: req.body.email }, (err, doc) => {
 
@@ -129,7 +129,7 @@ const ValidateCookies = (req, res, next) => {
     }
 }
 
-app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
+app.get('/auth/checkMyOwnInfo', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc) => {
 
@@ -140,7 +140,7 @@ app.get('/users/checkMyOwnInfo', ValidateCookies, (req, res) => {
 })
 
 
-app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
+app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
 
@@ -192,7 +192,7 @@ app.put('/users/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
 })
 
-app.delete('/users/logout', ValidateCookies, (req, res) => {
+app.delete('/auth/logout', ValidateCookies, (req, res) => {
     res.cookie('CatTalk_userId', '0', { secure: true, sameSite: 'None', maxAge: 0 });
     return res.status(200).json({ msg: 'Success' })
 })
