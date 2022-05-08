@@ -197,7 +197,7 @@ app.delete('/auth/logout', ValidateCookies, (req, res) => {
     return res.status(200).json({ msg: 'Success' })
 })
 
-app.get('/users/:id', (req, res) => {
+app.get('/users/search/:id', (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.params.id) }, (err, doc) => {
 
@@ -368,6 +368,34 @@ app.post('/chat/enterCharacter', ValidateCookies, (req, res) => {
                         })
                 })
             })
+
+
+app.get('/users/mostChats', (req, res) => {
+
+    db.collection('users').find().toArray((err, docs) => {
+        if (err) return res.status(500)
+        docs.sort((a, b) => parseInt(b.stats.totalChats) - parseInt(a.stats.totalChats));
+        res.send(docs)
+    })
+})
+
+app.get('/users/mostSentMessages', (req, res) => {
+
+    db.collection('users').find().toArray((err, docs) => {
+        if (err) return res.status(500)
+        docs.sort((a, b) => parseInt(b.stats.totalMessagesSent) - parseInt(a.stats.totalMessagesSent));
+        res.send(docs)
+    })
+})
+
+app.get('/users/mostCharactersEntered', (req, res) => {
+
+    db.collection('users').find().toArray((err, docs) => {
+        if (err) return res.status(500)
+        docs.sort((a, b) => parseInt(b.stats.totalCharactersEntered) - parseInt(a.stats.totalCharactersEntered));
+        res.send(docs)
+    })
+})
 
 MongoClient.connect('mongodb+srv://pavlov:mspx@cattalk.g76jv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
 
