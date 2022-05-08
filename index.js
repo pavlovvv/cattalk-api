@@ -299,7 +299,7 @@ app.post('/chat/leave', (req, res) => {
 
                 if (err) return res.status(500)
 
-                // res.status(200).send({ msg: 'Success' })
+                res.status(200).send({ msg: 'Success' })
             })
 
     })
