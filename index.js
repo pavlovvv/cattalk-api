@@ -17,7 +17,7 @@ app.use(cors({
     // origin: 'http://localhost:3000',
     // origin: 'https://cat-talk2.vercel.app',
     // origin: 'https://cat-talk-l6mh5d0xf-pavlovvv.vercel.app',
-    origin: 'https://cat-talk2-pavlovvv.vercel.app/',
+    origin: 'https://cat-talk2-pavlovvv.vercel.app',
     allowedHeaders: 'Authorization, Origin, X-Requested-With, Access-Control-Request-Headers, content-type, Content-Type, Access-Control-Request-Method, Accept, Access-Control-Allow-Headers',
     "optionsSuccessStatus": 200
 }));
