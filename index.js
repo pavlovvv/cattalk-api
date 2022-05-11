@@ -372,6 +372,20 @@ app.post('/chat/enterCharacter', ValidateCookies, (req, res) => {
             })
 
 
+app.get('/users/get', (req, res) => {
+
+    let count = req.query.count || 5
+    let page = req.query.page || 0
+
+    req.query.page && (page *= count , count = parseInt(count) + page)
+
+
+    db.collection('users').find().toArray((err, docs) => {
+        if (err) return res.status(500)
+        res.send(docs.slice(page, count))
+    })
+})
+
 app.get('/users/mostChats', (req, res) => {
 
     db.collection('users').find().toArray((err, docs) => {
