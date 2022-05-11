@@ -42,56 +42,57 @@ app.post('/auth/signup', (req, res) => {
             return res.status(409).json({ msg: "This email has already been used" })
         }
 
-    })
+        db.collection('usersData').find().toArray((err, docs) => {
 
-    db.collection('usersData').find().toArray((err, docs) => {
-
-        const userData = {
-            email: req.body.email,
-            password: req.body.password,
-            id: docs.length + 1
-        }
-
-        db.collection('usersData').insertOne(userData, (err, result) => {
-
-            if (err) return res.status(500)
-
-        })
-    })
-
-    db.collection('users').find().toArray((err, docs) => {
-
-        const user = {
-            id: docs.length + 1,
-            email: req.body.email,
-            login: req.body.username,
-            info: {
-                name: req.body.name,
-                surname: req.body.surname,
-                username: req.body.username,
+            const userData = {
                 email: req.body.email,
-                id: docs.length + 1,
-                age: null,
-                location: null,
-                avatar: null,
-                instagramLink: null
-            },
-            stats: {
-                totalChats: 0,
-                totalMessagesSent: 0,
-                totalCharactersEntered: 0,
-            },
-            friends: []
-
-        }
-
-        db.collection('users').insertOne(user, (err, result) => {
-
-            if (err) return res.status(500)
-
-            return res.status(200).json({ msg: "Auth confirmed" })
+                password: req.body.password,
+                id: docs.length + 1
+            }
+    
+            db.collection('usersData').insertOne(userData, (err, result) => {
+    
+                if (err) return res.status(500)
+    
+            })
         })
+    
+        db.collection('users').find().toArray((err, docs) => {
+    
+            const user = {
+                id: docs.length + 1,
+                email: req.body.email,
+                login: req.body.username,
+                info: {
+                    name: req.body.name,
+                    surname: req.body.surname,
+                    username: req.body.username,
+                    email: req.body.email,
+                    id: docs.length + 1,
+                    age: null,
+                    location: null,
+                    avatar: null,
+                    instagramLink: null
+                },
+                stats: {
+                    totalChats: 0,
+                    totalMessagesSent: 0,
+                    totalCharactersEntered: 0,
+                },
+                friends: []
+    
+            }
+    
+            db.collection('users').insertOne(user, (err, result) => {
+    
+                if (err) return res.status(500)
+    
+                return res.status(200).json({ msg: "Auth confirmed" })
+            })
+        })
+
     })
+
 })
 
 
