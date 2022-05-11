@@ -377,40 +377,51 @@ app.get('/users/get', (req, res) => {
 
     let count = req.query.count || 5
     let page = req.query.page || 0
-
     req.query.page && (page *= count , count = parseInt(count) + page)
 
 
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
-        res.send(docs.slice(page, count))
+        res.json({ items: docs.slice(page, count), totalUsersCount: docs.length })
     })
 })
 
 app.get('/users/mostChats', (req, res) => {
 
+    let count = req.query.count || 5
+    let page = req.query.page || 0
+    req.query.page && (page *= count , count = parseInt(count) + page)
+
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
         docs.sort((a, b) => parseInt(b.stats.totalChats) - parseInt(a.stats.totalChats));
-        res.send(docs)
+        res.json({ items: docs.slice(page, count), totalUsersCount: docs.length })
     })
 })
 
 app.get('/users/mostSentMessages', (req, res) => {
 
+    let count = req.query.count || 5
+    let page = req.query.page || 0
+    req.query.page && (page *= count , count = parseInt(count) + page)
+
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
         docs.sort((a, b) => parseInt(b.stats.totalMessagesSent) - parseInt(a.stats.totalMessagesSent));
-        res.send(docs)
+        res.json({ items: docs.slice(page, count), totalUsersCount: docs.length })
     })
 })
 
 app.get('/users/mostCharactersEntered', (req, res) => {
 
+    let count = req.query.count || 5
+    let page = req.query.page || 0
+    req.query.page && (page *= count , count = parseInt(count) + page)
+
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
         docs.sort((a, b) => parseInt(b.stats.totalCharactersEntered) - parseInt(a.stats.totalCharactersEntered));
-        res.send(docs)
+        res.json({ items: docs.slice(page, count), totalUsersCount: docs.length })
     })
 })
 
