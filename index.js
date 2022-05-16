@@ -312,6 +312,7 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], (req, 
 
     })
 
+    
 
     app.put('/auth/updatePersonalData', ValidateCookies, (req, res) => {
 
