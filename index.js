@@ -3,6 +3,8 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const cookieParser = require('cookie-parser')
 let cors = require('cors');
+const sizeOf = require('image-size');
+const fs = require('fs')
 const app = express();
 
 const multer  = require('multer')
@@ -129,8 +131,8 @@ app.post('/auth/login', (req, res) => {
 
         else if (doc.password === req.body.password) {
             res.cookie('CatTalk_userId', doc.id, {
-                // secure: true,
-                // sameSite: 'None'
+                secure: true,
+                sameSite: 'None'
             })
             db.collection('users').findOne({ email: req.body.email }, (err, doc2) => {
                 if (doc) {
@@ -139,7 +141,7 @@ app.post('/auth/login', (req, res) => {
 
             })
         }
-        else if (doc.password !== req.body.password) return res.status(403).json({ msg: "Incorrect values" })
+        else if (doc.password !== req.body.password) return res.status(400).json({ msg: "Incorrect values" })
     })
 })
 
@@ -281,9 +283,22 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
 
 app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], (req, res) => {
 
+    const dimensions = sizeOf(req.file.path);
+
+    if (dimensions.width / dimensions.height <= 0.8 || dimensions.width / dimensions.height >= 1.1) {
+        fs.unlink(req.file.path, (err) => {
+            if (err) {
+              console.error(err)
+              return
+            }
+          })
+        return res.status(400).json({msg: 'Invalid image size'})
+    }
+
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
 
         if (err) return res.status(500)
+
 
             db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
                 {
