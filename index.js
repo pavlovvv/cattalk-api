@@ -327,6 +327,39 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], (req, 
 
     })
 
+    app.delete('/auth/deleteAvatar', ValidateCookies, (req, res) => {
+        db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+
+            if (err) return res.status(500)
+    
+    
+                db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                    {
+                        $set: {
+                            info: {
+                                name: doc1.info.name,
+                                surname: doc1.info.surname,
+                                username: doc1.info.username,
+                                email: doc1.info.email,
+                                id: doc1.info.id,
+                                age: doc1.info.age,
+                                location: doc1.info.location,
+                                avatar: null,
+                                instagramLink: doc1.info.instagramLink,
+                                telegramUsername: doc1.info.telegramUsername,
+                                discordUsername: doc1.info.discordUsername
+                            }
+                        }
+                    }, (err, doc2) => {
+    
+                        if (err) return res.status(500)
+    
+                        res.status(200).json({ msg: 'Success' })
+                    })
+            })
+    
+    })
+
     
 
     app.put('/auth/updatePersonalData', ValidateCookies, (req, res) => {
