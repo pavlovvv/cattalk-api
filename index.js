@@ -2,15 +2,44 @@ const express = require('express')
 const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const cookieParser = require('cookie-parser')
+let cors = require('cors');
 const app = express();
+
+const multer  = require('multer')
+const storage = multer.diskStorage({destination: function(req, file, cb) {
+    cb(null, './uploads/')
+},
+    filename: function(req, file, cb) {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname)
+    },
+})
+
+const fileFilter = (req, file, cb) => {
+
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true)
+    }
+
+    else {
+        cb(null, false)
+    }
+
+}
+
+const upload = multer({storage: storage,
+    limits: 1024 * 1024 * 20,
+    fileFilter: fileFilter
+})
+
 let db;
 const port = process.env.PORT || 3013
 
 app.use(cookieParser())
+app.use('/uploads', express.static('uploads'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-let cors = require('cors');
+ 
 
 app.use(cors({
     credentials: true,
@@ -21,15 +50,6 @@ app.use(cors({
     allowedHeaders: 'Authorization, Origin, X-Requested-With, Access-Control-Request-Headers, content-type, Content-Type, Access-Control-Request-Method, Accept, Access-Control-Allow-Headers',
     "optionsSuccessStatus": 200
 }));
-
-
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//     res.header("Access-Control-Allow-Credentials", true);
-//     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-//     res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Authorization, Origin, Accept, content-type, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-//     next()
-// })
 
 
 app.get('/', (req, res) => {
@@ -49,16 +69,16 @@ app.post('/auth/signup', (req, res) => {
                 password: req.body.password,
                 id: docs.length + 1
             }
-    
+
             db.collection('usersData').insertOne(userData, (err, result) => {
-    
+
                 if (err) return res.status(500)
-    
+
             })
         })
-    
+
         db.collection('users').find().toArray((err, docs) => {
-    
+
             const user = {
                 id: docs.length + 1,
                 email: req.body.email,
@@ -72,7 +92,9 @@ app.post('/auth/signup', (req, res) => {
                     age: null,
                     location: null,
                     avatar: null,
-                    instagramLink: null
+                    instagramLink: null,
+                    telegramUsername: null,
+                    discordUsername: null
                 },
                 stats: {
                     totalChats: 0,
@@ -80,13 +102,13 @@ app.post('/auth/signup', (req, res) => {
                     totalCharactersEntered: 0,
                 },
                 friends: []
-    
+
             }
-    
+
             db.collection('users').insertOne(user, (err, result) => {
-    
+
                 if (err) return res.status(500)
-    
+
                 return res.status(200).json({ msg: "Auth confirmed" })
             })
         })
@@ -107,8 +129,8 @@ app.post('/auth/login', (req, res) => {
 
         else if (doc.password === req.body.password) {
             res.cookie('CatTalk_userId', doc.id, {
-                secure: true,
-                sameSite: 'None'
+                // secure: true,
+                // sameSite: 'None'
             })
             db.collection('users').findOne({ email: req.body.email }, (err, doc2) => {
                 if (doc) {
@@ -154,7 +176,7 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
             if (loginDoc) {
                 if (doc1.id !== loginDoc.id) {
-                    return res.status(409).json({ msg: "Username is already exist" })
+                    return res.status(409).json({ msg: "This username is already exist" })
                 }
             }
 
@@ -170,19 +192,119 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
                             age: req.body.age,
                             location: req.body.location,
                             avatar: doc1.info.avatar,
-                            instagramLink: doc1.info.instagramLink
-                        }
+                            instagramLink: doc1.info.instagramLink,
+                            telegramUsername: doc1.info.telegramUsername,
+                            discordUsername: doc1.info.discordUsername
+                        },
+                        login: req.body.username
                     }
                 }, (err, doc2) => {
 
                     if (err) return res.status(500)
 
-                    db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
-                        { $set: { login: req.body.username } }, (err, doc2) => {
+                    // db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                    //     { $set: { login: req.body.username } }, (err, doc2) => {
 
-                            if (err) return res.status(500)
+                    //         if (err) return res.status(500)
 
-                        })
+                    //     })
+
+                    res.status(200).json({ msg: 'Success' })
+                })
+        })
+
+    })
+
+})
+
+
+app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
+
+    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+
+        if (err) return res.status(500)
+
+        db.collection('usersData').findOne({ email: req.body.email }, (err, doc2) => {
+
+            if (err) return res.status(500)
+
+            if (doc2) {
+                if (doc1.info.id !== doc2.id) {
+                    return res.status(409).json({ msg: "This email has already been used" })
+                }
+            }
+
+            db.collection('usersData').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+
+                if (err) return res.status(500)
+
+                db.collection('usersData').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                    {
+                        $set: {
+                            email: req.body.email,
+                            password: req.body.password || doc3.password
+                        }
+                    }, (err, doc4) => {
+
+                        if (err) return res.status(500)
+
+                        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                            {
+                                $set: {
+                                    email: req.body.email, info: {
+                                        name: doc1.info.name,
+                                        surname: doc1.info.surname,
+                                        username: doc1.info.username,
+                                        email: req.body.email,
+                                        id: doc1.info.id,
+                                        age: doc1.info.age,
+                                        location: doc1.info.location,
+                                        avatar: doc1.info.avatar,
+                                        instagramLink: doc1.info.instagramLink,
+                                        telegramUsername: doc1.info.telegramUsername,
+                                        discordUsername: doc1.info.discordUsername
+                                    }
+                                }
+                            }, (err, doc5) => {
+
+                                if (err) return res.status(500)
+
+                            })
+
+                        res.status(200).json({ msg: 'Success' })
+                    })
+            })
+        })
+    })
+
+})
+
+app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], (req, res) => {
+
+    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+
+        if (err) return res.status(500)
+
+            db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                {
+                    $set: {
+                        info: {
+                            name: doc1.info.name,
+                            surname: doc1.info.surname,
+                            username: doc1.info.username,
+                            email: doc1.info.email,
+                            id: doc1.info.id,
+                            age: doc1.info.age,
+                            location: doc1.info.location,
+                            avatar: req.file.path,
+                            instagramLink: doc1.info.instagramLink,
+                            telegramUsername: doc1.info.telegramUsername,
+                            discordUsername: doc1.info.discordUsername
+                        }
+                    }
+                }, (err, doc2) => {
+
+                    if (err) return res.status(500)
 
                     res.status(200).json({ msg: 'Success' })
                 })
@@ -191,9 +313,42 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
     })
 
 
+    app.put('/auth/updatePersonalData', ValidateCookies, (req, res) => {
+
+        db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+    
+            if (err) return res.status(500)
+    
+                db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                    {
+                        $set: {
+                            info: {
+                                name: doc1.info.name,
+                                surname: doc1.info.surname,
+                                username: doc1.info.username,
+                                email: doc1.info.email,
+                                id: doc1.info.id,
+                                age: doc1.info.age,
+                                location: doc1.info.location,
+                                avatar: doc1.info.avatar,
+                                instagramLink: req.body.instagramLink,
+                                telegramUsername: req.body.telegramUsername,
+                                discordUsername: req.body.discordUsername
+                            }
+                        }
+                    }, (err, doc2) => {
+    
+                        if (err) return res.status(500)
+    
+                        res.status(200).json({ msg: 'Success' })
+                    })
+            })
+    
+        })
 
 
-})
+
+
 
 app.delete('/auth/logout', ValidateCookies, (req, res) => {
     res.cookie('CatTalk_userId', '0', { secure: true, sameSite: 'None', maxAge: 0 });
@@ -282,7 +437,7 @@ app.post('/chat/join', ValidateCookies, (req, res) => {
                                 stats: {
                                     totalChats: parseInt(doc3.stats.totalChats + 1),
                                     totalMessagesSent: parseInt(doc3.stats.totalMessagesSent),
-                                    totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered) 
+                                    totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered)
                                 }
                             }
                         }, (err, doc4) => {
@@ -300,6 +455,8 @@ app.post('/chat/join', ValidateCookies, (req, res) => {
     })
 
 })
+
+
 
 app.post('/chat/leave', (req, res) => {
 
@@ -333,7 +490,7 @@ app.post('/chat/sendMessage', ValidateCookies, (req, res) => {
                     stats: {
                         totalChats: parseInt(doc3.stats.totalChats),
                         totalMessagesSent: parseInt(doc3.stats.totalMessagesSent + 1),
-                        totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered) 
+                        totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered)
                     }
                 }
             }, (err, doc4) => {
@@ -349,35 +506,35 @@ app.post('/chat/sendMessage', ValidateCookies, (req, res) => {
 
 app.post('/chat/enterCharacter', ValidateCookies, (req, res) => {
 
-                db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
 
-                    if (err) return res.status(500)
+        if (err) return res.status(500)
 
-                    db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
-                        {
-                            $set: {
-                                stats: {
-                                    totalChats: parseInt(doc3.stats.totalChats),
-                                    totalMessagesSent: parseInt(doc3.stats.totalMessagesSent),
-                                    totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered + 1) 
-                                }
-                            }
-                        }, (err, doc4) => {
+        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+            {
+                $set: {
+                    stats: {
+                        totalChats: parseInt(doc3.stats.totalChats),
+                        totalMessagesSent: parseInt(doc3.stats.totalMessagesSent),
+                        totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered + 1)
+                    }
+                }
+            }, (err, doc4) => {
 
-                            if (err) return res.status(500)
+                if (err) return res.status(500)
 
-                            return res.status(200).json({ msg: 'Success' })
+                return res.status(200).json({ msg: 'Success' })
 
-                        })
-                })
             })
+    })
+})
 
 
 app.get('/users/get', (req, res) => {
 
     let count = req.query.count || 5
     let page = req.query.page || 0
-    req.query.page && (page *= count , count = parseInt(count) + page)
+    req.query.page && (page *= count, count = parseInt(count) + page)
 
 
     db.collection('users').find().toArray((err, docs) => {
@@ -390,7 +547,7 @@ app.get('/users/mostChats', (req, res) => {
 
     let count = req.query.count || 5
     let page = req.query.page || 0
-    req.query.page && (page *= count , count = parseInt(count) + page)
+    req.query.page && (page *= count, count = parseInt(count) + page)
 
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
@@ -403,7 +560,7 @@ app.get('/users/mostSentMessages', (req, res) => {
 
     let count = req.query.count || 5
     let page = req.query.page || 0
-    req.query.page && (page *= count , count = parseInt(count) + page)
+    req.query.page && (page *= count, count = parseInt(count) + page)
 
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
@@ -416,7 +573,7 @@ app.get('/users/mostCharactersEntered', (req, res) => {
 
     let count = req.query.count || 5
     let page = req.query.page || 0
-    req.query.page && (page *= count , count = parseInt(count) + page)
+    req.query.page && (page *= count, count = parseInt(count) + page)
 
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
