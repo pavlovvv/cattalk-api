@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 let cors = require('cors');
 const sizeOf = require('image-size');
 const fs = require('fs')
+const {uploadFile} = require('./s3.js')
 const app = express();
 
 const multer  = require('multer')
@@ -281,7 +282,7 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
 
 })
 
-app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], (req, res) => {
+app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], async (req, res) => {
 
     const dimensions = sizeOf(req.file.path);
 
@@ -294,6 +295,9 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], (req, 
           })
         return res.status(400).json({msg: 'Invalid image size'})
     }
+
+    const result = await uploadFile(req.file)
+
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
 
@@ -311,7 +315,7 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], (req, 
                             id: doc1.info.id,
                             age: doc1.info.age,
                             location: doc1.info.location,
-                            avatar: req.file.path,
+                            avatar: result.Location,
                             instagramLink: doc1.info.instagramLink,
                             telegramUsername: doc1.info.telegramUsername,
                             discordUsername: doc1.info.discordUsername
