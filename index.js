@@ -286,15 +286,15 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], async 
 
     const dimensions = sizeOf(req.file.path);
 
-    if (dimensions.width / dimensions.height <= 0.8 || dimensions.width / dimensions.height >= 1.1) {
-        fs.unlink(req.file.path, (err) => {
-            if (err) {
-              console.error(err)
-              return
-            }
-          })
-        return res.status(400).json({msg: 'Invalid image size'})
-    }
+    // if (dimensions.width / dimensions.height <= 0.8 || dimensions.width / dimensions.height >= 1.1) {
+    //     fs.unlink(req.file.path, (err) => {
+    //         if (err) {
+    //           console.error(err)
+    //           return
+    //         }
+    //       })
+    //     return res.status(400).json({msg: 'Invalid image size'})
+    // }
 
     const result = await uploadFile(req.file)
 
