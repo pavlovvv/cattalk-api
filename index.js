@@ -138,8 +138,8 @@ app.post('/auth/login', (req, res) => {
 
         else if (doc.password === req.body.password) {
             res.cookie('CatTalk_userId', doc.id, {
-                // secure: true,
-                // sameSite: 'None'
+                secure: true,
+                sameSite: 'None'
             })
             db.collection('users').findOne({ email: req.body.email }, (err, doc2) => {
                 if (doc) {
