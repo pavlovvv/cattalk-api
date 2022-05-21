@@ -662,7 +662,7 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
 
         if (err) return res.status(500)
 
-     
+    
     db.collection('users').findOne({ id: parseInt(req.body.id) }, (err, to) => {
 
         if (err) return res.status(500)
