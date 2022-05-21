@@ -872,7 +872,8 @@ app.post('/users/confirmFriend', ValidateCookies, (req, res) => {
 
         })
 
-        My.friends.confirmedFriends.push({ id: req.body.id, username: req.body.username, avatar: req.body.avatar })
+        My.friends.confirmedFriends.push({ id: req.body.id, name: req.body.name, surname: req.body.surname, 
+            username: req.body.username, avatar: req.body.avatar })
 
 
         db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
@@ -900,7 +901,8 @@ app.post('/users/confirmFriend', ValidateCookies, (req, res) => {
             
                     })
             
-                    Their.friends.confirmedFriends.push({ id: My.info.id, username: My.info.username, avatar: My.info.avatar })
+                    Their.friends.confirmedFriends.push({ id: My.info.id, username: My.info.name, username: My.info.surname, 
+                        username: My.info.username, avatar: My.info.avatar })
             
             
                     db.collection('users').updateOne({ id: req.body.id },
