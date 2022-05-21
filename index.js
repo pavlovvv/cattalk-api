@@ -757,7 +757,7 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
 })
 })
 
-app.delete('/users/refuseOwnFriendRequest', ValidateCookies, (req, res) => {
+app.post('/users/refuseOwnFriendRequest', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, from) => {
 
@@ -805,7 +805,7 @@ app.delete('/users/refuseOwnFriendRequest', ValidateCookies, (req, res) => {
     })
 })
 
-app.delete('/users/refuseFriendRequest', ValidateCookies, (req, res) => {
+app.post('/users/refuseFriendRequest', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, from) => {
 
