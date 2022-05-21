@@ -688,7 +688,8 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
 
             })
 
-            to.friends.confirmedFriends.push({ id: from.info.id, username: from.info.username, avatar: from.info.avatar })
+            to.friends.confirmedFriends.push({ id: from.info.id, name: from.info.name, surname: from.info.surname, 
+                username: from.info.username, avatar: from.info.avatar })
 
                 db.collection('users').updateOne({ id: parseInt(req.body.id) },
                     {
@@ -701,7 +702,8 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
 
                         if (err) return res.status(500)
 
-                            from.friends.confirmedFriends.push({ id: req.body.id, username: req.body.username, avatar: req.body.avatar })
+                            from.friends.confirmedFriends.push({ id: req.body.id, name: req.body.name, surname: req.body.surname, 
+                                username: req.body.username, avatar: req.body.avatar })
 
                             db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
                                 {
@@ -723,7 +725,8 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
 
         else {
 
-                from.friends.pendingFriends.push({ id: req.body.id, username: req.body.username, avatar: req.body.avatar })
+                from.friends.pendingFriends.push({ id: req.body.id, name: req.body.name, surname: req.body.surname, 
+                    username: req.body.username, avatar: req.body.avatar })
         
                 db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
                     {
@@ -739,7 +742,8 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
         
                             if (err) return res.status(500)
         
-                            to.friends.waitingFriends.push({ id: from.info.id, username: from.info.username, avatar: from.info.avatar })
+                            to.friends.waitingFriends.push({ id: from.info.id, name: from.info.name, surname: from.info.surname, 
+                                username: from.info.username, avatar: from.info.avatar })
         
                             db.collection('users').updateOne({ id: parseInt(req.body.id) },
                                 {
