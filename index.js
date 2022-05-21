@@ -940,7 +940,7 @@ app.delete('/users/deleteFriend/:id', ValidateCookies, (req, res) => {
 
                 if (err) return res.status(500)
 
-                db.collection('users').findOne({ id: req.params.id }, (err, Their) => {
+                db.collection('users').findOne({ id: parseInt(req.params.id) }, (err, Their) => {
 
                     if (err) return res.status(500)
             
@@ -950,7 +950,7 @@ app.delete('/users/deleteFriend/:id', ValidateCookies, (req, res) => {
             
                     })
             
-                    db.collection('users').updateOne({ id: req.params.id },
+                    db.collection('users').updateOne({ id: parseInt(req.params.id) },
                         {
                             $set: {
                                 "friends.confirmedFriends": theirFilteredConfirmedArr,
