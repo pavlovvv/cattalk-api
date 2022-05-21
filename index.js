@@ -694,7 +694,8 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
                     {
                         $set: {
                             "friends.confirmedFriends": to.friends.confirmedFriends,
-                            "friends.pendingFriends": filteredPendingArr2
+                            "friends.pendingFriends": filteredPendingArr2,
+                            "friends.totalFriendsCount": parseInt(to.friends.totalFriendsCount + 1),
                         }
                     }, (err, doc3) => {
 
@@ -706,7 +707,8 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
                                 {
                                     $set: {
                                         "friends.confirmedFriends": from.friends.confirmedFriends,
-                                        "friends.waitingFriends": filteredWaitingArr
+                                        "friends.waitingFriends": filteredWaitingArr,
+                                        "friends.totalFriendsCount": parseInt(from.friends.totalFriendsCount + 1),
                                     }
                                 }, (err, doc) => {
 
