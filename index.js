@@ -918,7 +918,7 @@ app.post('/users/confirmFriend', ValidateCookies, (req, res) => {
     })
 })
 
-app.delete('/users/deleteFriend', ValidateCookies, (req, res) => {
+app.delete('/users/deleteFriend/:id', ValidateCookies, (req, res) => {
 
     db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, My) => {
 
@@ -926,7 +926,7 @@ app.delete('/users/deleteFriend', ValidateCookies, (req, res) => {
 
         const myFilteredConfirmedArr = My.friends.confirmedFriends.filter(e => {
 
-            if (e.id !== parseInt(req.body.id)) return e
+            if (e.id !== parseInt(req.params.id)) return e
 
         })
 
@@ -940,7 +940,7 @@ app.delete('/users/deleteFriend', ValidateCookies, (req, res) => {
 
                 if (err) return res.status(500)
 
-                db.collection('users').findOne({ id: req.body.id }, (err, Their) => {
+                db.collection('users').findOne({ id: req.params.id }, (err, Their) => {
 
                     if (err) return res.status(500)
             
@@ -950,7 +950,7 @@ app.delete('/users/deleteFriend', ValidateCookies, (req, res) => {
             
                     })
             
-                    db.collection('users').updateOne({ id: req.body.id },
+                    db.collection('users').updateOne({ id: req.params.id },
                         {
                             $set: {
                                 "friends.confirmedFriends": theirFilteredConfirmedArr,
