@@ -901,7 +901,7 @@ app.post('/users/confirmFriend', ValidateCookies, (req, res) => {
             
                     })
             
-                    Their.friends.confirmedFriends.push({ id: My.info.id, username: My.info.name, username: My.info.surname, 
+                    Their.friends.confirmedFriends.push({ id: My.info.id, name: My.info.name, surname: My.info.surname, 
                         username: My.info.username, avatar: My.info.avatar })
             
             
