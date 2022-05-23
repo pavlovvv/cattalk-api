@@ -603,6 +603,43 @@ app.post('/chat/enterCharacter', ValidateCookies, (req, res) => {
 })
 
 
+app.post('/users/search', (req, res) => {
+
+    db.collection('users').find().toArray((err, docs) => {
+        if (err) return res.status(500)
+
+        const allUsers = [];
+        docs.forEach(user => {
+            const data = {
+                id: user.id, 
+                avatar: user.info.avatar, 
+                name: user.info.name,
+                surname: user.info.surname,
+                username: user.info.username,
+                stats: user.stats,
+                data: user.info.name.toLowerCase() + ' ' + user.info.surname.toLowerCase() + ' ' + user.info.username.toLowerCase()
+            }
+            allUsers.push(data)
+
+        })
+
+        const filteredUsers = allUsers.filter((el) => {
+            if (req.body.searchText === '') {
+              return;
+            }
+      
+            else {
+      
+              if (req.body.searchText.length > 2) {
+                return el.data.toLowerCase().includes(req.body.searchText)
+              }
+            }
+          })
+
+        res.send(filteredUsers)
+    })
+})
+
 app.get('/users/get', (req, res) => {
 
     let count = req.query.count || 5
