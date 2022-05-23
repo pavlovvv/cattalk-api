@@ -48,7 +48,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    // origin: 'http://localhost:3000',
+    origin: 'https://cat-talk.vercel.app/',
     // origin: 'https://cat-talk2.vercel.app',
     // origin: 'https://cat-talk-l6mh5d0xf-pavlovvv.vercel.app',
     // origin: 'https://cat-talk2-pavlovvv.vercel.app',
@@ -157,7 +158,6 @@ app.post('/auth/login', (req, res) => {
 
 const ValidateCookies = (req, res, next) => {
     if ('CatTalk_userId' in req.cookies) {
-        console.log(1)
         next()
     }
     else {
