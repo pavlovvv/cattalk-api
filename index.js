@@ -49,7 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true,
     // origin: 'http://localhost:3000',
-    origin: 'https://cat-talk.vercel.app/',
+    origin: 'https://main.d22yliq9u6bbw7.amplifyapp.com',
     // origin: 'https://cat-talk2.vercel.app',
     // origin: 'https://cat-talk-l6mh5d0xf-pavlovvv.vercel.app',
     // origin: 'https://cat-talk2-pavlovvv.vercel.app',
