@@ -137,13 +137,14 @@ app.post('/auth/login', (req, res) => {
         else if (!doc) return res.status(404).json({ msg: "User was not found" })
 
         else if (doc.password === req.body.password) {
-            res.cookie('CatTalk_userId', doc.id, {
-                secure: true,
-                sameSite: 'None'
-            })
             db.collection('users').findOne({ email: req.body.email }, (err, doc2) => {
+                res.cookie('CatTalk_userId', doc2._id.toString(), {
+                    secure: true,
+                    sameSite: 'None'
+                })
+
                 if (doc) {
-                    return res.status(200).json(doc2)
+                    return res.status(200).send(doc2)
                 }
 
             })
@@ -165,7 +166,7 @@ const ValidateCookies = (req, res, next) => {
 
 app.get('/auth/checkMyOwnInfo', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc) => {
 
         if (err) return res.status(500)
 
@@ -176,7 +177,7 @@ app.get('/auth/checkMyOwnInfo', ValidateCookies, (req, res) => {
 
 app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc1) => {
 
         if (err) return res.status(500)
 
@@ -189,7 +190,7 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
                 }
             }
 
-            db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+            db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                 {
                     $set: {
                         // info: {
@@ -216,7 +217,7 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
                     if (err) return res.status(500)
 
-                    // db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                    // db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                     //     { $set: { login: req.body.username } }, (err, doc2) => {
 
                     //         if (err) return res.status(500)
@@ -234,7 +235,7 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
 
 app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc1) => {
 
         if (err) return res.status(500)
 
@@ -248,11 +249,11 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
                 }
             }
 
-            db.collection('usersData').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+            db.collection('usersData').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc3) => {
 
                 if (err) return res.status(500)
 
-                db.collection('usersData').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                db.collection('usersData').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                     {
                         $set: {
                             email: req.body.email,
@@ -262,7 +263,7 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
 
                         if (err) return res.status(500)
 
-                        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                             {
                                 $set: {
                                     email: req.body.email,
@@ -312,12 +313,12 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], async 
     const result = await uploadFile(req.file)
 
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc1) => {
 
         if (err) return res.status(500)
 
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     // info: {
@@ -346,12 +347,12 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], async 
 })
 
 app.delete('/auth/deleteAvatar', ValidateCookies, (req, res) => {
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc1) => {
 
         if (err) return res.status(500)
 
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     // info: {
@@ -382,11 +383,11 @@ app.delete('/auth/deleteAvatar', ValidateCookies, (req, res) => {
 
 app.put('/auth/updatePersonalData', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc1) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc1) => {
 
         if (err) return res.status(500)
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     // info: {
@@ -496,10 +497,10 @@ app.post('/chat/join', ValidateCookies, (req, res) => {
 
                 if (err) return res.status(500)
 
-                db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+                db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc3) => {
 
                     if (err) return res.status(500)
-                    db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                    db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                         {
                             $set: {
                                 // stats: {
@@ -551,11 +552,11 @@ app.post('/chat/leave', (req, res) => {
 
 app.post('/chat/sendMessage', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc3) => {
 
         if (err) return res.status(500)
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     // stats: {
@@ -578,11 +579,11 @@ app.post('/chat/sendMessage', ValidateCookies, (req, res) => {
 
 app.post('/chat/enterCharacter', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, doc3) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, doc3) => {
 
         if (err) return res.status(500)
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     // stats: {
@@ -695,7 +696,7 @@ app.get('/users/mostCharactersEntered', (req, res) => {
 app.post('/users/addFriend', ValidateCookies, (req, res) => {
 
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, from) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, from) => {
 
         if (err) return res.status(500)
 
@@ -742,7 +743,7 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
                             from.friends.confirmedFriends.push({ id: req.body.id, name: req.body.name, surname: req.body.surname, 
                                 username: req.body.username, avatar: req.body.avatar })
 
-                            db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                            db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                                 {
                                     $set: {
                                         "friends.confirmedFriends": from.friends.confirmedFriends,
@@ -765,7 +766,7 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
                 from.friends.pendingFriends.push({ id: req.body.id, name: req.body.name, surname: req.body.surname, 
                     username: req.body.username, avatar: req.body.avatar })
         
-                db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+                db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                     {
                         $set: {
                             "friends.pendingFriends": from.friends.pendingFriends
@@ -802,7 +803,7 @@ app.post('/users/addFriend', ValidateCookies, (req, res) => {
 
 app.post('/users/refuseOwnFriendRequest', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, from) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, from) => {
 
         if (err) return res.status(500)
 
@@ -812,7 +813,7 @@ app.post('/users/refuseOwnFriendRequest', ValidateCookies, (req, res) => {
 
         })
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     "friends.pendingFriends": filteredPendingArr
@@ -850,7 +851,7 @@ app.post('/users/refuseOwnFriendRequest', ValidateCookies, (req, res) => {
 
 app.post('/users/refuseFriendRequest', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, from) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, from) => {
 
         if (err) return res.status(500)
 
@@ -860,7 +861,7 @@ app.post('/users/refuseFriendRequest', ValidateCookies, (req, res) => {
 
         })
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     "friends.waitingFriends": filteredWaitingArr
@@ -899,7 +900,7 @@ app.post('/users/refuseFriendRequest', ValidateCookies, (req, res) => {
 
 app.post('/users/confirmFriend', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, My) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, My) => {
 
         if (err) return res.status(500)
 
@@ -913,7 +914,7 @@ app.post('/users/confirmFriend', ValidateCookies, (req, res) => {
             username: req.body.username, avatar: req.body.avatar })
 
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     friends: {
@@ -965,7 +966,7 @@ app.post('/users/confirmFriend', ValidateCookies, (req, res) => {
 
 app.delete('/users/deleteFriend/:id', ValidateCookies, (req, res) => {
 
-    db.collection('users').findOne({ id: parseInt(req.cookies.CatTalk_userId) }, (err, My) => {
+    db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId)}, (err, My) => {
 
         if (err) return res.status(500)
 
@@ -975,7 +976,7 @@ app.delete('/users/deleteFriend/:id', ValidateCookies, (req, res) => {
 
         })
 
-        db.collection('users').updateOne({ id: parseInt(req.cookies.CatTalk_userId) },
+        db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
                     "friends.confirmedFriends": myFilteredConfirmedArr,
