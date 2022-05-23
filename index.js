@@ -157,6 +157,7 @@ app.post('/auth/login', (req, res) => {
 
 const ValidateCookies = (req, res, next) => {
     if ('CatTalk_userId' in req.cookies) {
+        console.log(1)
         next()
     }
     else {
