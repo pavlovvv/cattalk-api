@@ -111,7 +111,8 @@ app.post('/auth/signup', (req, res) => {
                 friends: {
                     confirmedFriends: [],
                     pendingFriends: [],
-                    totalFriendsCount: 0
+                    totalFriendsCount: 0,
+                    waitingFriends: []
                 }
 
             }
