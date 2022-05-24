@@ -49,7 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true,
     // origin: 'http://localhost:3000',
-    origin: 'https://main.d22yliq9u6bbw7.amplifyapp.com',
+    origin: 'https://www.cattalk.net',
     // origin: 'https://cat-talk2.vercel.app',
     // origin: 'https://cat-talk-l6mh5d0xf-pavlovvv.vercel.app',
     // origin: 'https://cat-talk2-pavlovvv.vercel.app',
@@ -194,19 +194,6 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
             db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                 {
                     $set: {
-                        // info: {
-                        //     name: req.body.name,
-                        //     surname: req.body.surname,
-                        //     username: req.body.username,
-                        //     email: doc1.info.email,
-                        //     id: doc1.info.id,
-                        //     age: req.body.age,
-                        //     location: req.body.location,
-                        //     avatar: doc1.info.avatar,
-                        //     instagramLink: doc1.info.instagramLink,
-                        //     telegramUsername: doc1.info.telegramUsername,
-                        //     discordUsername: doc1.info.discordUsername
-                        // },
                         "info.name": req.body.name,
                         "info.surname": req.body.surname,
                         "info.username": req.body.username,
@@ -217,13 +204,6 @@ app.put('/auth/updateMyOwnInfo', ValidateCookies, (req, res) => {
                 }, (err, doc2) => {
 
                     if (err) return res.status(500)
-
-                    // db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
-                    //     { $set: { login: req.body.username } }, (err, doc2) => {
-
-                    //         if (err) return res.status(500)
-
-                    //     })
 
                     res.status(200).json({ msg: 'Success' })
                 })
@@ -268,19 +248,6 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
                             {
                                 $set: {
                                     email: req.body.email,
-                                    // info: {
-                                    //     name: doc1.info.name,
-                                    //     surname: doc1.info.surname,
-                                    //     username: doc1.info.username,
-                                    //     email: req.body.email,
-                                    //     id: doc1.info.id,
-                                    //     age: doc1.info.age,
-                                    //     location: doc1.info.location,
-                                    //     avatar: doc1.info.avatar,
-                                    //     instagramLink: doc1.info.instagramLink,
-                                    //     telegramUsername: doc1.info.telegramUsername,
-                                    //     discordUsername: doc1.info.discordUsername
-                                    // }
                                     "info.email": req.body.email
                                 }
                             }, (err, doc5) => {
@@ -301,16 +268,6 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], async 
 
     const dimensions = sizeOf(req.file.path);
 
-    // if (dimensions.width / dimensions.height <= 0.8 || dimensions.width / dimensions.height >= 1.1) {
-    //     fs.unlink(req.file.path, (err) => {
-    //         if (err) {
-    //           console.error(err)
-    //           return
-    //         }
-    //       })
-    //     return res.status(400).json({msg: 'Invalid image size'})
-    // }
-
     const result = await uploadFile(req.file)
 
 
@@ -322,19 +279,6 @@ app.put('/auth/updateAvatar', [ValidateCookies, upload.single('avatar')], async 
         db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
-                    // info: {
-                    //     name: doc1.info.name,
-                    //     surname: doc1.info.surname,
-                    //     username: doc1.info.username,
-                    //     email: doc1.info.email,
-                    //     id: doc1.info.id,
-                    //     age: doc1.info.age,
-                    //     location: doc1.info.location,
-                    //     avatar: result.Location,
-                    //     instagramLink: doc1.info.instagramLink,
-                    //     telegramUsername: doc1.info.telegramUsername,
-                    //     discordUsername: doc1.info.discordUsername
-                    // }
                     "info.avatar": result.Location
                 }
             }, (err, doc2) => {
@@ -356,19 +300,6 @@ app.delete('/auth/deleteAvatar', ValidateCookies, (req, res) => {
         db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
-                    // info: {
-                    //     name: doc1.info.name,
-                    //     surname: doc1.info.surname,
-                    //     username: doc1.info.username,
-                    //     email: doc1.info.email,
-                    //     id: doc1.info.id,
-                    //     age: doc1.info.age,
-                    //     location: doc1.info.location,
-                    //     avatar: null,
-                    //     instagramLink: doc1.info.instagramLink,
-                    //     telegramUsername: doc1.info.telegramUsername,
-                    //     discordUsername: doc1.info.discordUsername
-                    // }
                     "info.avatar": null
                 },
             }, (err, doc2) => {
@@ -391,19 +322,6 @@ app.put('/auth/updatePersonalData', ValidateCookies, (req, res) => {
         db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
-                    // info: {
-                    //     name: doc1.info.name,
-                    //     surname: doc1.info.surname,
-                    //     username: doc1.info.username,
-                    //     email: doc1.info.email,
-                    //     id: doc1.info.id,
-                    //     age: doc1.info.age,
-                    //     location: doc1.info.location,
-                    //     avatar: doc1.info.avatar,
-                    //     instagramLink: req.body.instagramLink,
-                    //     telegramUsername: req.body.telegramUsername,
-                    //     discordUsername: req.body.discordUsername
-                    // },
                     "info.instagramLink": req.body.instagramLink,
                     "info.telegramUsername": req.body.telegramUsername,
                     "info.discordUsername": req.body.discordUsername
@@ -504,12 +422,6 @@ app.post('/chat/join', ValidateCookies, (req, res) => {
                     db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
                         {
                             $set: {
-                                // stats: {
-                                //     totalChats: parseInt(doc3.stats.totalChats + 1),
-                                //     totalMessagesSent: parseInt(doc3.stats.totalMessagesSent),
-                                //     totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered)
-                                // },
-
                                 "stats.totalChats": parseInt(doc3.stats.totalChats + 1)
 
                             }
@@ -560,11 +472,6 @@ app.post('/chat/sendMessage', ValidateCookies, (req, res) => {
         db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
-                    // stats: {
-                    //     totalChats: parseInt(doc3.stats.totalChats),
-                    //     totalMessagesSent: parseInt(doc3.stats.totalMessagesSent + 1),
-                    //     totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered)
-                    // }
                     "stats.totalMessagesSent": parseInt(doc3.stats.totalMessagesSent + 1)
                 }
             }, (err, doc4) => {
@@ -587,11 +494,6 @@ app.post('/chat/enterCharacter', ValidateCookies, (req, res) => {
         db.collection('users').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId)},
             {
                 $set: {
-                    // stats: {
-                    //     totalChats: parseInt(doc3.stats.totalChats),
-                    //     totalMessagesSent: parseInt(doc3.stats.totalMessagesSent),
-                    //     totalCharactersEntered: parseInt(doc3.stats.totalCharactersEntered + 1)
-                    // }
                     "stats.totalCharactersEntered": parseInt(doc3.stats.totalCharactersEntered + 1)
                 }
             }, (err, doc4) => {
