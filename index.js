@@ -257,15 +257,15 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
                 }
             }
 
-            db.collection('usersData').findOne({ _id: ObjectId(req.cookies.CatTalk_userId) }, (err, doc3) => {
+            db.collection('usersData').findOne({ id: parseInt(req.body.id) }, (err, doc3) => {
 
                 if (err) return res.status(500)
 
-                db.collection('usersData').updateOne({ _id: ObjectId(req.cookies.CatTalk_userId) },
+                db.collection('usersData').updateOne({ id: parseInt(req.body.id) },
                     {
                         $set: {
                             email: req.body.email,
-                            password: req.body.password ?? doc3.password
+                            password: req.body.password || doc3.password
                         }
                     }, (err, doc4) => {
 
