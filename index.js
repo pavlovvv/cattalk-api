@@ -265,7 +265,7 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
                     {
                         $set: {
                             email: req.body.email,
-                            password: req.body.password || doc3.password
+                            password: req.body.password ?? doc3.password
                         }
                     }, (err, doc4) => {
 
