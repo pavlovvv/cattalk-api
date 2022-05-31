@@ -257,11 +257,14 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
                 }
             }
 
-            db.collection('usersData').findOne({ id: parseInt(req.body.id) }, (err, doc3) => {
+            db.collection('usersData').findOne({ id: doc1.info.id }, (err, doc3) => {
 
                 if (err) return res.status(500)
 
-                db.collection('usersData').updateOne({ id: parseInt(req.body.id) },
+                console.log(req.body.password || doc3.password)
+                console.log(req.body.password === null ? doc3.password : req.body.password)
+
+                db.collection('usersData').updateOne({ id: doc1.info.id  },
                     {
                         $set: {
                             email: req.body.email,
