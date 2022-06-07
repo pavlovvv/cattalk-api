@@ -9,6 +9,16 @@ const { uploadAvatar, uploadChatFiles, deleteAllFiles } = require('./s3.js')
 const CronJob = require('cron').CronJob;
 const app = express();
 
+app.use(cors({
+    credentials: true,
+    origin: "https://www.cattalk.net",
+    //origin: 'http://localhost:3000',
+    // origin: 'https://main.d34yc05l9qqdm0.amplifyapp.com',
+    allowedHeaders: 'Authorization, Origin, X-Requested-With, Access-Control-Request-Headers, content-type, Content-Type, Access-Control-Request-Method, Accept, Access-Control-Allow-Headers',
+    "optionsSuccessStatus": 200
+}));
+
+
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -49,15 +59,6 @@ app.use(cookieParser())
 app.use('/uploads', express.static('uploads'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(cors({
-    credentials: true,
-    //origin: 'http://localhost:3000',
-    origin: 'https://www.cattalk.net/',
-    // origin: 'https://main.d34yc05l9qqdm0.amplifyapp.com',
-    allowedHeaders: 'Authorization, Origin, X-Requested-With, Access-Control-Request-Headers, content-type, Content-Type, Access-Control-Request-Method, Accept, Access-Control-Allow-Headers',
-    "optionsSuccessStatus": 200
-}));
 
 
 new CronJob('0 30 3 * * *', () => {
