@@ -10,8 +10,8 @@ const CronJob = require('cron').CronJob;
 const app = express();
 
 app.use(cors({
+    origin: "https://cattalk.net",
     credentials: true,
-    origin: "*",
     //origin: 'http://localhost:3000',
     // origin: 'https://main.d34yc05l9qqdm0.amplifyapp.com',
     allowedHeaders: 'Authorization, Origin, X-Requested-With, Access-Control-Request-Headers, content-type, Content-Type, Access-Control-Request-Method, Accept, Access-Control-Allow-Headers',
