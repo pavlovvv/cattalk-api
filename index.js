@@ -261,9 +261,6 @@ app.put('/auth/updateSecurityData', ValidateCookies, (req, res) => {
 
                 if (err) return res.status(500)
 
-                console.log(req.body.password || doc3.password)
-                console.log(req.body.password === null ? doc3.password : req.body.password)
-
                 db.collection('usersData').updateOne({ id: doc1.info.id  },
                     {
                         $set: {
