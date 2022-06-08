@@ -91,12 +91,16 @@ app.post('/auth/signup', (req, res) => {
             return res.status(409).json({ msg: "This email has already been used" })
         }
 
+        let lastEl;
+
         db.collection('usersData').find().toArray((err, docs) => {
+
+            lastEl = docs[docs.length - 1]
 
             const userData = {
                 email: req.body.email,
                 password: req.body.password,
-                id: docs.length + 1
+                id: lastEl.id + 1
             }
 
             db.collection('usersData').insertOne(userData, (err, result) => {
@@ -109,15 +113,16 @@ app.post('/auth/signup', (req, res) => {
         db.collection('users').find().toArray((err, docs) => {
 
             const user = {
-                id: docs.length + 1,
+                id: lastEl.id + 1,
                 email: req.body.email,
                 login: req.body.username,
+                rank: req.body.rank,
                 info: {
                     name: req.body.name,
                     surname: req.body.surname,
                     username: req.body.username,
                     email: req.body.email,
-                    id: docs.length + 1,
+                    id: lastEl.id + 1,
                     age: null,
                     location: null,
                     avatar: null,
