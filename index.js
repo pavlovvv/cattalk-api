@@ -61,7 +61,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-new CronJob('0 30 3 * * *', () => {
+new CronJob('0 46 2 * * *', () => {
+    db.collection('users').deleteMany({ "rank" : "Guest" })
     db.collection('users').updateMany({},
         {
             $set: {
