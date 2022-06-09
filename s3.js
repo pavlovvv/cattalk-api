@@ -56,7 +56,6 @@ exports.deleteAllFiles = async(files) => {
   
     chat_files_s3.listObjects(params, function(err, data) {
       if (err) return callback(err);
-      console.log(data)
       if (data.Contents.length == 0) callback();
   
       params = {Bucket: bucketName};
