@@ -96,6 +96,7 @@ app.post('/auth/signup', (req, res) => {
 
         db.collection('usersData').find().toArray((err, docs) => {
 
+
             lastEl = docs[docs.length - 1]
 
             const userData = {
