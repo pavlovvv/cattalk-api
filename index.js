@@ -62,7 +62,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 new CronJob('0 30 3 * * *', () => {
-    db.collection('users').deleteMany({ "rank" : "Guest" })
+    db.collection('users').deleteMany({ "type" : "Guest" })
     db.collection('users').updateMany({},
         {
             $set: {
@@ -118,7 +118,7 @@ app.post('/auth/signup', (req, res) => {
                 id: lastEl.id + 1,
                 email: req.body.email,
                 login: req.body.username,
-                rank: req.body.rank,
+                type: req.body.type,
                 info: {
                     name: req.body.name,
                     surname: req.body.surname,
@@ -963,6 +963,90 @@ app.delete('/users/deleteFriend/:id', ValidateCookies, (req, res) => {
     })
 })
 
+
+app.post('/auth/continueWithGoogle', (req, res) => {
+
+    db.collection('users').findOne({ email: req.body.email }, (err, checkedUser) => {
+
+        if (err) return res.status(500)
+
+        if (checkedUser) {
+
+            res.cookie('CatTalk_userId', checkedUser._id.toString(), {
+                secure: true,
+                sameSite: 'None'
+            })
+
+            return res.status(200).json({msg: 'Auth confirmed'})
+        }
+
+        else {
+        
+                let lastEl;
+        
+                db.collection('usersData').find().toArray((err, docs) => {
+        
+        
+                    lastEl = docs[docs.length - 1]
+        
+                    const userData = {
+                        email: req.body.email,
+                        password: req.body.password,
+                        id: lastEl.id + 1
+                    }
+        
+                    db.collection('usersData').insertOne(userData, (err, result) => {
+        
+                        if (err) return res.status(500)
+        
+                    })
+                })
+    
+                    const user = {
+                        id: lastEl.id + 1,
+                        email: req.body.email,
+                        login: req.body.username,
+                        type: "google_user",
+                        info: {
+                            name: req.body.name,
+                            surname: req.body.surname,
+                            username: req.body.username,
+                            email: req.body.email,
+                            id: lastEl.id + 1,
+                            age: null,
+                            location: null,
+                            avatar: req.body.avatar,
+                            instagramLink: null,
+                            telegramUsername: null,
+                            discordUsername: null
+                        },
+                        stats: {
+                            totalChats: 0,
+                            totalMessagesSent: 0,
+                            totalCharactersEntered: 0,
+                        },
+                        friends: {
+                            confirmedFriends: [],
+                            pendingFriends: [],
+                            waitingFriends: [],
+                            totalFriendsCount: 0,
+                        },
+                        limits: {
+                            freeSpaceTaken: 0,
+                            filesSent: 0
+                        }
+        
+                    }
+        
+                    db.collection('users').insertOne(user, (err, result) => {
+        
+                        if (err) return res.status(500)
+        
+                        return res.status(200).json({ msg: "Auth confirmed" })
+                    })     
+        }     
+    })
+})
 
 app.post('/chat/uploadFile', [ValidateCookies, filesUpload.array('file')], (req, res) => {
 
