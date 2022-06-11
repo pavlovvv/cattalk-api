@@ -1040,10 +1040,8 @@ app.post('/auth/continueWithGoogle', (req, res) => {
                     db.collection('users').insertOne(user, (err, result) => {
         
                         if (err) return res.status(500)
-        
-                        console.log(result)
 
-                        res.cookie('CatTalk_userId', result._id.toString(), {
+                        res.cookie('CatTalk_userId', result.insertedId.toString(), {
                             secure: true,
                             sameSite: 'None'
                         })
