@@ -1041,6 +1041,13 @@ app.post('/auth/continueWithGoogle', (req, res) => {
         
                         if (err) return res.status(500)
         
+                        console.log(result)
+
+                        res.cookie('CatTalk_userId', result._id.toString(), {
+                            secure: true,
+                            sameSite: 'None'
+                        })
+
                         return res.status(200).json({ msg: "Auth confirmed" })
                     })   
                     })  
