@@ -991,7 +991,7 @@ app.post('/auth/continueWithGoogle', (req, res) => {
         
                     const userData = {
                         email: req.body.email,
-                        password: req.body.password,
+                        password: null,
                         id: lastEl.id + 1
                     }
         
@@ -1000,7 +1000,6 @@ app.post('/auth/continueWithGoogle', (req, res) => {
                         if (err) return res.status(500)
         
                     })
-                })
     
                     const user = {
                         id: lastEl.id + 1,
@@ -1043,7 +1042,8 @@ app.post('/auth/continueWithGoogle', (req, res) => {
                         if (err) return res.status(500)
         
                         return res.status(200).json({ msg: "Auth confirmed" })
-                    })     
+                    })   
+                    })  
         }     
     })
 })
