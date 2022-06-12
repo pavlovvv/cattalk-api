@@ -977,7 +977,7 @@ app.post('/auth/continueWithGoogle', (req, res) => {
                 sameSite: 'None'
             })
 
-            return res.status(200).json({msg: 'Auth confirmed'})
+            return res.status(200).send(checkedUser)
         }
 
         else {
@@ -1046,7 +1046,12 @@ app.post('/auth/continueWithGoogle', (req, res) => {
                             sameSite: 'None'
                         })
 
-                        return res.status(200).json({ msg: "Auth confirmed" })
+                        db.collection('users').findOne({ _id: ObjectId(result.insertedId) }, (err, user) => {
+
+                            if (err) return res.status(500)
+
+                            return res.status(200).send(user)
+                        })
                     })   
                     })  
         }     
