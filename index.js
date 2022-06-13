@@ -562,14 +562,14 @@ app.post('/users/search', (req, res) => {
         })
 
         const filteredUsers = allUsers.filter((el) => {
-            if (req.params.searchText === '') {
+            if (req.body.searchText === '') {
                 return;
             }
 
             else {
 
-                if (req.params.searchText.length > 2) {
-                    return el.data.toLowerCase().includes(req.params.searchText)
+                if (req.body.searchText.length > 2) {
+                    return el.data.toLowerCase().includes(req.body.searchText)
                 }
             }
         })
