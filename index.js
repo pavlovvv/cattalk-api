@@ -579,7 +579,6 @@ app.post('/users/search', (req, res) => {
 })
 
 app.get('/users/search1', (req, res) => {
-    console.log(req)
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
 
@@ -597,7 +596,7 @@ app.get('/users/search1', (req, res) => {
             allUsers.push(data)
 
         })
-
+        console.log(req.params)
         const filteredUsers = allUsers.filter((el) => {
             if (req.params.searchText === '') {
                 return;
