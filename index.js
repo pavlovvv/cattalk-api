@@ -596,16 +596,16 @@ app.get('/users/search1', (req, res) => {
             allUsers.push(data)
 
         })
-        console.log(req.params)
+        console.log(req.query)
         const filteredUsers = allUsers.filter((el) => {
-            if (req.params.searchText === '') {
+            if (req.query.searchText === '') {
                 return;
             }
 
             else {
 
-                if (req.params.searchText.length > 2) {
-                    return el.data.toLowerCase().includes(req.params.searchText)
+                if (req.query.searchText.length > 2) {
+                    return el.data.toLowerCase().includes(req.query.searchText)
                 }
             }
         })
