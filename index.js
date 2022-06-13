@@ -579,7 +579,7 @@ app.post('/users/search', (req, res) => {
 })
 
 app.get('/users/search1', (req, res) => {
-
+    console.log(req.params)
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
 
