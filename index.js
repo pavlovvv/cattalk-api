@@ -87,12 +87,11 @@ app.get('/', (req, res) => {
 })
 
 app.post('/auth/signup', (req, res) => {
+    let lastEl;
     db.collection('usersData').findOne({ email: req.body.email }, (err, doc) => {
         if (doc) {
             return res.status(409).json({ msg: "This email has already been used" })
         }
-
-        let lastEl;
 
         db.collection('usersData').find().toArray((err, docs) => {
 
