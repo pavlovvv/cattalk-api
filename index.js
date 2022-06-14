@@ -577,7 +577,7 @@ app.post('/users/search', (req, res) => {
     })
 })
 
-app.get('/users/search1', (req, res) => {
+app.get('/users/search', (req, res) => {
     db.collection('users').find().toArray((err, docs) => {
         if (err) return res.status(500)
 
