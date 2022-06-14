@@ -87,7 +87,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/auth/signup', (req, res) => {
-    let lastEl;
+
     db.collection('usersData').findOne({ email: req.body.email }, (err, doc) => {
         if (doc) {
             return res.status(409).json({ msg: "This email has already been used" })
@@ -95,6 +95,7 @@ app.post('/auth/signup', (req, res) => {
 
         db.collection('usersData').find().toArray((err, docs) => {
 
+            let lastEl;
 
             lastEl = docs[docs.length - 1]
 
@@ -108,57 +109,55 @@ app.post('/auth/signup', (req, res) => {
 
                 if (err) return res.status(500)
 
+                db.collection('users').find().toArray((err, docs) => {
+
+                    const user = {
+                        id: lastEl.id + 1,
+                        email: req.body.email,
+                        login: req.body.username,
+                        type: req.body.type,
+                        info: {
+                            name: req.body.name,
+                            surname: req.body.surname,
+                            username: req.body.username,
+                            email: req.body.email,
+                            id: lastEl.id + 1,
+                            age: null,
+                            location: null,
+                            avatar: null,
+                            instagramLink: null,
+                            telegramUsername: null,
+                            discordUsername: null
+                        },
+                        stats: {
+                            totalChats: 0,
+                            totalMessagesSent: 0,
+                            totalCharactersEntered: 0,
+                        },
+                        friends: {
+                            confirmedFriends: [],
+                            pendingFriends: [],
+                            waitingFriends: [],
+                            totalFriendsCount: 0,
+                        },
+                        limits: {
+                            freeSpaceTaken: 0,
+                            filesSent: 0
+                        }
+        
+                    }
+        
+                    db.collection('users').insertOne(user, (err, result) => {
+        
+                        if (err) return res.status(500)
+        
+                        return res.status(200).json({ msg: "Auth confirmed" })
+                    })
+                })
+
             })
         })
-
-        db.collection('users').find().toArray((err, docs) => {
-
-            const user = {
-                id: lastEl.id + 1,
-                email: req.body.email,
-                login: req.body.username,
-                type: req.body.type,
-                info: {
-                    name: req.body.name,
-                    surname: req.body.surname,
-                    username: req.body.username,
-                    email: req.body.email,
-                    id: lastEl.id + 1,
-                    age: null,
-                    location: null,
-                    avatar: null,
-                    instagramLink: null,
-                    telegramUsername: null,
-                    discordUsername: null
-                },
-                stats: {
-                    totalChats: 0,
-                    totalMessagesSent: 0,
-                    totalCharactersEntered: 0,
-                },
-                friends: {
-                    confirmedFriends: [],
-                    pendingFriends: [],
-                    waitingFriends: [],
-                    totalFriendsCount: 0,
-                },
-                limits: {
-                    freeSpaceTaken: 0,
-                    filesSent: 0
-                }
-
-            }
-
-            db.collection('users').insertOne(user, (err, result) => {
-
-                if (err) return res.status(500)
-
-                return res.status(200).json({ msg: "Auth confirmed" })
-            })
-        })
-
     })
-
 })
 
 
