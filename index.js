@@ -1011,7 +1011,7 @@ app.post('/auth/continueWithGoogle', (req, res) => {
                 sameSite: 'None'
             })
 
-            return res.status(200).send(checkedUser)
+            return res.status(200).json({msg: 'Login confirmed'})
         }
 
         else {
@@ -1084,7 +1084,7 @@ app.post('/auth/continueWithGoogle', (req, res) => {
 
                             if (err) return res.status(500)
 
-                            return res.status(200).send(user)
+                            return res.status(200).json({msg: 'Signup confirmed'})
                         })
                     })   
                     })  
