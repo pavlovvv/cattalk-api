@@ -1017,7 +1017,6 @@ app.post('/auth/continueWithGoogle', (req, res) => {
         else {
         
                 let lastEl;
-        
                 db.collection('usersData').find().toArray((err, docs) => {
         
         
