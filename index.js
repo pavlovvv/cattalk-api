@@ -52,7 +52,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin: "https://www.cattalk.net/",
+    origin: "https://www.cattalk.net",
     credentials: true,
     //origin: 'http://localhost:3000',
     // origin: 'https://main.d34yc05l9qqdm0.amplifyapp.com',
