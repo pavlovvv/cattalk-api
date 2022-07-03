@@ -419,7 +419,7 @@ app.post('/token/find', (req, res) => {
     db.collection('tokens').findOne({ _id: ObjectId(req.body.token) }, (err, doc) => {
 
         if (err) return res.status(500)
-        if (!doc) return res.status(404).json({ msg: 'Token was not found' })
+        if (!doc) return res.status(404).json({ msg: 'Token was not found. Try again later' })
         res.status(200).json({ found_token: doc.token })
 
     })
@@ -430,7 +430,7 @@ app.post('/token/getConnectedUsers', (req, res) => {
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc) => {
 
         if (err) return res.status(500)
-        if (!doc) return res.status(404).json({ msg: 'Token was not found' })
+        if (!doc) return res.status(404).json({ msg: 'Token was not found. Try again later' })
         res.status(200).json({ connectedUsers: doc.connectedUsers })
 
     })
@@ -441,7 +441,7 @@ app.post('/chat/join', ValidateCookies, (req, res) => {
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
 
         if (err) return res.status(500)
-        if (!doc1) return res.status(404).json({ msg: 'Token was not found' })
+        if (!doc1) return res.status(404).json({ msg: 'Token was not found. Try again later' })
 
         db.collection('tokens').updateOne({ token: req.body.token },
             { $set: { isBusy: true, connectedUsers: parseInt(doc1.connectedUsers + 1) } }, (err, doc2) => {
@@ -480,7 +480,7 @@ app.post('/chat/leave', (req, res) => {
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
 
         if (err) return res.status(500)
-        if (!doc1) return res.status(404).json({ msg: 'Token was not found' })
+        if (!doc1) return res.status(404).json({ msg: 'Token was not found. Try again later' })
 
         db.collection('tokens').updateOne({ token: req.body.token },
             { $set: { isBusy: doc1.connectedUsers - 1 !== 0 ? true : false, connectedUsers: parseInt(doc1.connectedUsers - 1) } }, (err, doc2) => {
