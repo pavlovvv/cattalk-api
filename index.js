@@ -198,7 +198,6 @@ const ValidateCookies = (req, res, next) => {
 }
 
 app.get('/auth/checkMyOwnInfo', ValidateCookies, (req, res) => {
-    app.disable('etag');
 
     db.collection('users').findOne({ _id: ObjectId(req.cookies.CatTalk_userId) }, (err, doc) => {
 
