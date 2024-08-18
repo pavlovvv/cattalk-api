@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "An API for CatTalk service",
   "main": "index.js",
+  "engines" : {
+    "node": ">=18"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,11 +21,9 @@
     "fs": "^0.0.1-security",
     "image-size": "^1.0.1",
     "mongodb": "^4.5.0",
+    "mongoose": "^7.4.3",
     "multer": "^1.4.4",
     "ws": "^8.5.0",
     "yarn": "^1.22.18"
-  },
-  "engines": {
-    "node": "v14.17.0"
   }
 }
