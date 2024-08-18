@@ -54,7 +54,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
         origin: [
-            "https://cattalk-ojxrt7sfcq-uc.a.run.app", 'http://localhost:3000'
+            "https://cattalk.vercel.app", 'http://localhost:3000'
         ],
         credentials: true,
     })
