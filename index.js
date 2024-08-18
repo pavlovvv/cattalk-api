@@ -444,7 +444,7 @@ app.post('/chat/join', ValidateCookies, (req, res) => {
     db.collection('tokens').findOne({ token: req.body.token }, (err, doc1) => {
 
         if (err) return res.status(500)
-        if (!doc1) return res.status(404).json({ msg: 'Token was not found. Try again later' })
+        if (!doc1) return res.status(404).json({ msg: 'Token was not found. Try again later!' })
 
         db.collection('tokens').updateOne({ token: req.body.token },
             { $set: { isBusy: true, connectedUsers: parseInt(doc1.connectedUsers + 1) } }, (err, doc2) => {
